@@ -1,4 +1,3 @@
-// src/components/sections/DestinationsSection.tsx
 'use client'
 
 import { motion } from "framer-motion"
@@ -10,7 +9,7 @@ const popularDestinations = [
   {
     city: "New York",
     country: "USA",
-    image: "/images/destinations/new-york.jpg", // Add these images to public folder
+    image: "/images/destinations/new-york.jpg",
     price: "From $299",
     rating: 4.8,
     trending: true
@@ -110,7 +109,7 @@ export function DestinationsSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -10, scale: 1.02 }}
-              className="group relative rounded-2xl overflow-hidden shadow-lg"
+              className="group relative rounded-3xl overflow-hidden shadow-lg"
             >
               <div className="aspect-w-3 aspect-h-4 relative">
                 <Image
@@ -167,7 +166,7 @@ export function DestinationsSection() {
               whileTap={{ scale: 0.98 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${offer.color} p-8 text-white cursor-pointer`}
+              className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${offer.color} p-8 text-white cursor-pointer`}
             >
               <motion.div
                 className="absolute top-4 right-4"
@@ -205,16 +204,16 @@ export function DestinationsSection() {
         {/* Action Buttons */}
         <div className="mt-16 flex justify-center space-x-6">
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow-lg"
+            className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold shadow-lg"
           >
             Explore All Destinations
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 rounded-xl border-2 border-purple-600 text-purple-600 font-semibold"
+            className="px-8 py-3 rounded-full border-2 border-purple-600 text-purple-600 font-semibold"
           >
             View All Offers
           </motion.button>

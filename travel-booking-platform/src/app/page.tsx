@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Plane, Bus, Film, ArrowRight, Clock, Shield, Sparkles } from "lucide-react"
 import { HeroSection } from '@/components/sections/HeroSection'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
+import Navbar from '@/components/sections/Navbar'
 
 const features = [
   {
@@ -35,6 +36,7 @@ const features = [
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <Navbar />
       <HeroSection />
 
       {/* Original Gradient Section */}
