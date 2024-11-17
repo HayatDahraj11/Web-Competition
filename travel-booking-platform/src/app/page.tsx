@@ -8,7 +8,8 @@ import { Plane, Bus, Film, ArrowRight, Clock, Shield, Sparkles } from "lucide-re
 import { HeroSection } from '@/components/sections/HeroSection'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import Navbar from '@/components/sections/Navbar'
-
+import { DestinationsSection } from '@/components/sections/DestinationsSection'
+import CustomerReviews from '@/components/sections/CustomerReviews'
 const features = [
   {
     title: "Flight Booking",
@@ -169,6 +170,7 @@ export default function Home() {
           </dl>
         </div>
       </div>
+      <CustomerReviews />
     </main>
   )
 }
