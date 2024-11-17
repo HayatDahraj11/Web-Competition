@@ -10,6 +10,7 @@ import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import Navbar from '@/components/sections/Navbar'
 import { DestinationsSection } from '@/components/sections/DestinationsSection'
 import CustomerReviews from '@/components/sections/CustomerReviews'
+import FactsAndFigures from "@/components/sections/FactsAndFigures"
 const features = [
   {
     title: "Flight Booking",
@@ -171,6 +172,7 @@ export default function Home() {
         </div>
       </div>
       <CustomerReviews />
+      <FactsAndFigures/>
     </main>
   )
 }

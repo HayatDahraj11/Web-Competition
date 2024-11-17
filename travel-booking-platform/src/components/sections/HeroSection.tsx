@@ -1,4 +1,3 @@
-// src/components/sections/HeroSection.tsx
 'use client'
 
 import { motion, AnimatePresence } from "framer-motion"
@@ -12,246 +11,296 @@ const categories = [
   { id: 'buses', icon: Bus, label: 'Buses', color: 'from-green-600 to-teal-600' },
 ]
 
+const dummyData = {
+  flights: {
+    cities: ['New York', 'London', 'Tokyo', 'Paris', 'Los Angeles', 'Dubai'],
+    data: [
+      { id: 1, from: 'New York', to: 'Los Angeles', date: '2024-12-01', price: '$200' },
+      { id: 2, from: 'London', to: 'Paris', date: '2024-12-02', price: '$150' },
+      { id: 3, from: 'Tokyo', to: 'Dubai', date: '2024-12-05', price: '$500' },
+    ]
+  },
+  movies: {
+    genres: ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror'],
+    data: [
+      { id: 1, title: 'Avengers: Endgame', date: '2024-12-01', genre: 'Action', time: '18:00', price: '$15' },
+      { id: 2, title: 'Inception', date: '2024-12-02', genre: 'Sci-Fi', time: '20:00', price: '$12' },
+      { id: 3, title: 'The Dark Knight', date: '2024-12-05', genre: 'Action', time: '19:00', price: '$14' },
+    ]
+  },
+  events: {
+    cities: ['New York', 'San Francisco', 'Paris', 'London', 'Tokyo'],
+    types: ['Concert', 'Conference', 'Exhibition', 'Sports', 'Theater'],
+    data: [
+      { id: 1, name: 'Rock Concert', date: '2024-12-10', city: 'New York', type: 'Concert', price: '$50' },
+      { id: 2, name: 'Tech Conference', date: '2024-12-12', city: 'San Francisco', type: 'Conference', price: '$200' },
+      { id: 3, name: 'Art Exhibition', date: '2024-12-15', city: 'Paris', type: 'Exhibition', price: '$30' },
+    ]
+  },
+  buses: {
+    cities: ['Chicago', 'Miami', 'Boston', 'New York', 'Los Angeles', 'San Francisco'],
+    data: [
+      { id: 1, from: 'Chicago', to: 'Miami', date: '2024-12-01', time: '10:00', price: '$100' },
+      { id: 2, from: 'Boston', to: 'New York', date: '2024-12-05', time: '12:00', price: '$50' },
+      { id: 3, from: 'Los Angeles', to: 'San Francisco', date: '2024-12-08', time: '14:00', price: '$75' },
+    ]
+  }
+}
+
+type SearchInputs = {
+  [key: string]: string;
+}
+
 export function HeroSection() {
   const [activeCategory, setActiveCategory] = useState('flights')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchInputs, setSearchInputs] = useState<SearchInputs>({})
 
-  // Floating animation for background elements
-  const floatingAnimation = {
-    initial: { y: 0 },
-    animate: {
-      y: [-20, 20, -20],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
+  const handleSearch = () => {
+    let results = [];
+    switch (activeCategory) {
+      case 'flights':
+      case 'buses':
+        results = dummyData[activeCategory].data.filter(item =>
+          (!searchInputs.from || item.from.includes(searchInputs.from)) &&
+          (!searchInputs.to || item.to.includes(searchInputs.to)) &&
+          (!searchInputs.date || item.date === searchInputs.date)
+        );
+        break;
+      case 'movies':
+        results = dummyData.movies.data.filter(item =>
+          (!searchInputs.title || item.title.toLowerCase().includes(searchInputs.title.toLowerCase())) &&
+          (!searchInputs.genre || item.genre === searchInputs.genre) &&
+          (!searchInputs.date || item.date === searchInputs.date)
+        );
+        break;
+      case 'events':
+        results = dummyData.events.data.filter(item =>
+          (!searchInputs.type || item.type === searchInputs.type) &&
+          (!searchInputs.city || item.city === searchInputs.city) &&
+          (!searchInputs.date || item.date === searchInputs.date)
+        );
+        break;
     }
+    setSearchResults(results);
   }
 
-  return (
-    <section className="relative min-h-[90vh] overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-        <motion.div
-          className="absolute inset-0 opacity-30"
-          animate={{
-            background: [
-              "linear-gradient(to right, #4f46e5, #7c3aed)",
-              "linear-gradient(to right, #7c3aed, #db2777)",
-              "linear-gradient(to right, #db2777, #4f46e5)",
-            ],
-          }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        
-        {/* Floating Elements */}
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-white/10 backdrop-blur-3xl"
-            style={{
-              width: Math.random() * 300 + 100,
-              height: Math.random() * 300 + 100,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            variants={floatingAnimation}
-            initial="initial"
-            animate="animate"
-            transition={{ delay: i * 0.2 }}
-          />
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
-        >
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl">
-              Your All-in-One
-              <motion.span
-                className="block mt-2 bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text"
-                animate={{ 
-                  backgroundPosition: ["0%", "100%", "0%"],
-                }}
-                transition={{ 
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                style={{ backgroundSize: "200%" }}
+  const renderSearchFields = () => {
+    switch (activeCategory) {
+      case 'flights':
+      case 'buses':
+        return (
+          <>
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">From</label>
+              <select
+                value={searchInputs.from || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, from: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
               >
-                Booking Platform
-              </motion.span>
-            </h1>
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="mt-6 text-xl text-neutral-200 max-w-2xl mx-auto"
-          >
-            Book flights, buses, movies, and events seamlessly. Experience the future of booking.
-          </motion.p>
-        </motion.div>
-
-        {/* Search Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-12"
-        >
-          <motion.div
-            className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8"
-            whileHover={{ boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}
-            animate={isSearchFocused ? { scale: 1.02 } : { scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="space-y-8">
-              {/* Category Tabs */}
-              <div className="flex flex-wrap gap-4 justify-center">
-                {categories.map((category) => (
-                  <motion.button
-                    key={category.id}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300
-                      ${activeCategory === category.id 
-                        ? `bg-gradient-to-r ${category.color} text-white` 
-                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}`}
-                    onClick={() => setActiveCategory(category.id)}
-                  >
-                    <motion.div
-                      initial={{ rotate: 0 }}
-                      animate={{ rotate: activeCategory === category.id ? 360 : 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <category.icon className="h-4 w-4 mr-2" />
-                    </motion.div>
-                    {category.label}
-                  </motion.button>
+                <option value="">Select departure city</option>
+                {dummyData[activeCategory].cities.map((city) => (
+                  <option key={city} value={city}>{city}</option>
                 ))}
-              </div>
-
-              {/* Search Fields */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCategory}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-4"
-                >
-                  <SearchInput
-                    icon={<MapPin className="h-5 w-5 text-neutral-500" />}
-                    placeholder="Where from?"
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
-                  />
-                  <SearchInput
-                    icon={<MapPin className="h-5 w-5 text-neutral-500" />}
-                    placeholder="Where to?"
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
-                  />
-                  <SearchInput
-                    icon={<Calendar className="h-5 w-5 text-neutral-500" />}
-                    placeholder="Select date"
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Search Button */}
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 30px rgba(0,0,0,0.2)" }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full bg-gradient-to-r ${categories.find(c => c.id === activeCategory)?.color} 
-                  text-white py-4 rounded-xl font-medium transition-all duration-300`}
-              >
-                Search {categories.find(c => c.id === activeCategory)?.label}
-              </motion.button>
+              </select>
             </div>
-          </motion.div>
-        </motion.div>
-      </div>
 
-      {/* Enhanced Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-      >
-        <motion.div
-          className="w-8 h-12 rounded-full border-2 border-white/30 flex items-center justify-center"
-          whileHover={{ scale: 1.2, borderColor: "rgba(255,255,255,0.5)" }}
-        >
-          <motion.div
-            className="w-1.5 h-1.5 bg-white rounded-full"
-            animate={{ 
-              y: [0, 12, 0],
-              opacity: [1, 0.5, 1]
-            }}
-            transition={{ 
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        </motion.div>
-      </motion.div>
-    </section>
-  )
-}
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">To</label>
+              <select
+                value={searchInputs.to || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, to: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              >
+                <option value="">Select destination</option>
+                {dummyData[activeCategory].cities.map((city) => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
 
-interface SearchInputProps {
-  icon: React.ReactNode;
-  placeholder: string;
-  onFocus?: () => void;
-  onBlur?: () => void;
-}
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Date</label>
+              <input
+                type="date"
+                value={searchInputs.date || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, date: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              />
+            </div>
+          </>
+        );
 
-function SearchInput({ icon, placeholder, onFocus, onBlur }: SearchInputProps) {
-  const [isFocused, setIsFocused] = useState(false)
+      case 'movies':
+        return (
+          <>
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Movie Title</label>
+              <input
+                type="text"
+                value={searchInputs.title || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, title: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+                placeholder="Enter movie title"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Genre</label>
+              <select
+                value={searchInputs.genre || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, genre: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              >
+                <option value="">Select genre</option>
+                {dummyData.movies.genres.map((genre) => (
+                  <option key={genre} value={genre}>{genre}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Date</label>
+              <input
+                type="date"
+                value={searchInputs.date || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, date: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              />
+            </div>
+          </>
+        );
+
+      case 'events':
+        return (
+          <>
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Event Type</label>
+              <select
+                value={searchInputs.type || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, type: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              >
+                <option value="">Select event type</option>
+                {dummyData.events.types.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">City</label>
+              <select
+                value={searchInputs.city || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, city: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              >
+                <option value="">Select city</option>
+                {dummyData.events.cities.map((city) => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm text-neutral-600 font-medium">Date</label>
+              <input
+                type="date"
+                value={searchInputs.date || ''}
+                onChange={(e) => setSearchInputs({ ...searchInputs, date: e.target.value })}
+                className="w-full mt-2 px-4 py-2 bg-gray-50 border rounded-xl"
+              />
+            </div>
+          </>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
-    <motion.div
-      className="relative"
-      whileFocus={{ scale: 1.02 }}
-      whileHover={{ scale: 1.02 }}
-    >
-      <motion.div
-        className="absolute left-4 top-1/2 -translate-y-1/2"
-        animate={isFocused ? { scale: 1.2 } : { scale: 1 }}
-      >
-        {icon}
-      </motion.div>
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="w-full pl-12 pr-4 py-4 rounded-xl border border-neutral-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-300 outline-none bg-white/80 backdrop-blur-sm"
-        onFocus={() => {
-          setIsFocused(true)
-          onFocus?.()
-        }}
-        onBlur={() => {
-          setIsFocused(false)
-          onBlur?.()
-        }}
-      />
-    </motion.div>
+    <div className="px-4 py-32 mx-auto max-w-7xl">
+      <div className="flex flex-col items-center max-w-2xl gap-4 mx-auto text-center">
+        <h1 className="text-5xl font-bold">
+          Book your next trip
+        </h1>
+        <p className="text-lg text-neutral-600">
+          Find and book a great experience
+        </p>
+      </div>
+
+      <div className="w-full max-w-5xl mx-auto mt-8">
+        <div className="p-4 bg-white rounded-2xl shadow-md">
+          <div className="flex gap-2 pb-4">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setActiveCategory(cat.id)
+                  setSearchInputs({})
+                  setSearchResults([])
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-neutral-50 transition-colors ${
+                  activeCategory === cat.id
+                    ? `bg-gradient-to-r ${cat.color} text-white`
+                    : ''
+                }`}
+              >
+                <cat.icon className="w-5 h-5" />
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="relative">
+            {/* Search Fields */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              >
+                {renderSearchFields()}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Search Button */}
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleSearch}
+                className="px-8 py-2 text-white bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+
+            {/* Search Results */}
+            {searchResults.length > 0 && (
+              <div className="mt-4 p-4 border rounded-xl">
+                <h3 className="text-lg font-semibold mb-2">Search Results:</h3>
+                <div className="grid gap-2">
+                  {searchResults.map((result) => (
+                    <div key={result.id} className="p-2 border rounded-lg">
+                      {activeCategory === 'flights' || activeCategory === 'buses' ? (
+                        <p>{`${result.from} to ${result.to} - ${result.date} - ${result.price}`}</p>
+                      ) : activeCategory === 'movies' ? (
+                        <p>{`${result.title} - ${result.genre} - ${result.date} - ${result.time} - ${result.price}`}</p>
+                      ) : (
+                        <p>{`${result.name} - ${result.type} - ${result.city} - ${result.date} - ${result.price}`}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
