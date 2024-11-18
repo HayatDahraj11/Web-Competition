@@ -30,7 +30,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-[90vh] overflow-hidden">
+    <section className="relative min-h-[90vh] overflow-visible">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
         <motion.div
@@ -189,31 +189,58 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Enhanced Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-      >
-        <motion.div
-          className="w-8 h-12 rounded-full border-2 border-white/30 flex items-center justify-center"
-          whileHover={{ scale: 1.2, borderColor: "rgba(255,255,255,0.5)" }}
-        >
-          <motion.div
-            className="w-1.5 h-1.5 bg-white rounded-full"
-            animate={{ 
-              y: [0, 12, 0],
-              opacity: [1, 0.5, 1]
-            }}
-            transition={{ 
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        </motion.div>
-      </motion.div>
-    </section>
+    {/* Enhanced Scroll Indicator */}
+<motion.div
+  className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-20" // Updated position
+  animate={{ y: [0, 10, 0] }}
+  transition={{ duration: 1.5, repeat: Infinity }}
+>
+  <motion.div
+    className="w-8 h-12 rounded-full border-2 border-white/30 flex items-center justify-center"
+    whileHover={{ scale: 1.2, borderColor: "rgba(255,255,255,0.5)" }}
+  >
+    <motion.div
+      className="w-1.5 h-1.5 bg-white rounded-full"
+      animate={{
+        y: [0, 12, 0],
+        opacity: [1, 0.5, 1]
+      }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    />
+  </motion.div>
+</motion.div>
+
+{/* Add the curved bottom here */}
+<div className="absolute bottom-0 left-0 w-full overflow-hidden leading-0 transform">
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, delay: 0.5 }}
+  >
+    <svg
+      className="relative block w-full h-[100px] sm:h-[150px]"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1200 120"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+        className="fill-white"
+      />
+    </svg>
+  </motion.div>
+</div>
+
+{/* Background Extension */}
+<div className="absolute bottom-0 left-0 w-full h-20 bg-white transform translate-y-1/2" />
+
+</section>
+
+    
   )
 }
 

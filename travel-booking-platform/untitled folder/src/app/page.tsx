@@ -7,9 +7,10 @@ import { motion } from "framer-motion"
 import { Plane, Bus, Film, ArrowRight, Clock, Shield, Sparkles } from "lucide-react"
 import { HeroSection } from '@/components/sections/HeroSection'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
+import Navbar from '@/components/sections/Navbar'
 import { DestinationsSection } from '@/components/sections/DestinationsSection'
 import CustomerReviews from '@/components/sections/CustomerReviews'
-
+import FactsAndFigures from "@/components/sections/FactsAndFigures"
 const features = [
   {
     title: "Flight Booking",
@@ -37,8 +38,55 @@ const features = [
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <Navbar />
       <HeroSection />
-      <DestinationsSection /> {/* Added here, after HeroSection */}
+
+      {/* Original Gradient Section */}
+      <div className="relative isolate">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="absolute inset-x-0 -z-10 transform-gpu overflow-hidden blur-3xl"
+        >
+          <div className="relative aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" />
+        </motion.div>
+
+        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mx-auto max-w-2xl text-center"
+          >
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Popular Destinations
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Explore our most booked destinations and special offers
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/explore"
+                  className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Explore All
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/offers"
+                  className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                >
+                  View Offers
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       <FeaturesSection />
 
       {/* Enhanced Features Grid */}
@@ -124,6 +172,7 @@ export default function Home() {
         </div>
       </div>
       <CustomerReviews />
+      <FactsAndFigures/>
     </main>
   )
 }
