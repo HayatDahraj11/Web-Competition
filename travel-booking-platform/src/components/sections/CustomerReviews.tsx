@@ -1,191 +1,237 @@
-import Image from 'next/image'
+// src/components/sections/CustomerReviews.tsx
+'use client'
 
-const CustomerReviews = () => {
-  const reviews = [
-    {
-      id: 1,
-      name: "Alex Smith",
-      role: "Software Engineer",
-      comment: "Great product! Really helped improve our workflow. The implementation was smooth and the results were immediate.",
-      rating: 5,
-      backgroundColor: "#f8f4ff"
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      role: "Product Manager",
-      comment: "Excellent customer service and quality. Would definitely recommend to anyone looking for a reliable solution.",
-      rating: 4,
-      backgroundColor: "#fff4f4"
-    },
-    {
-      id: 3,
-      name: "Mike Brown",
-      role: "Designer",
-      comment: "Intuitive interface and powerful features. It's exactly what our team needed to streamline our processes.",
-      rating: 5,
-      backgroundColor: "#f4fbff"
-    }
-  ];
+import { motion, useAnimation } from "framer-motion"
+import { useEffect, useRef } from "react"
+import { useInView } from "framer-motion"
+import { Star, Quote, User } from "lucide-react"
 
-  const renderStars = (rating) => {
-    return "★".repeat(rating) + "☆".repeat(5 - rating);
-  };
+const reviews = [
+  {
+    id: 1,
+    name: "Alex Smith",
+    role: "Software Engineer",
+    comment: "Great product! Really helped improve our workflow. The implementation was smooth and the results were immediate.",
+    rating: 5,
+    gradient: "from-blue-500 to-indigo-500",
+    lightGradient: "from-blue-50 to-indigo-50"
+  },
+  {
+    id: 2,
+    name: "Sarah Johnson",
+    role: "Product Manager",
+    comment: "Excellent customer service and quality. Would definitely recommend to anyone looking for a reliable solution.",
+    rating: 4,
+    gradient: "from-purple-500 to-pink-500",
+    lightGradient: "from-purple-50 to-pink-50"
+  },
+  {
+    id: 3,
+    name: "Mike Brown",
+    role: "Designer",
+    comment: "Intuitive interface and powerful features. It's exactly what our team needed to streamline our processes.",
+    rating: 5,
+    gradient: "from-green-500 to-emerald-500",
+    lightGradient: "from-green-50 to-emerald-50"
+  }
+];
+
+const ReviewCard = ({ review, index }: { review: any; index: number }) => {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
 
   return (
-    <div className="reviews-container">
-      <h2>What Our Customers Say</h2>
-      <div className="reviews-grid">
-        {reviews.map((review) => (
-          <div 
-            key={review.id} 
-            className="review-card"
-            style={{ backgroundColor: review.backgroundColor }}
-          >
-            <div className="review-header">
-              <div className="reviewer-info">
-                <div className="name-badge">
-                  {review.name.charAt(0)}
-                </div>
-                <div>
-                  <h3>{review.name}</h3>
-                  <p className="role">{review.role}</p>
-                </div>
-              </div>
-              <div className="rating">{renderStars(review.rating)}</div>
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.2,
+        ease: "easeOut"
+      }}
+      className="relative group"
+    >
+      {/* Animated Background Glow */}
+      <motion.div
+        className={`absolute inset-0 bg-gradient-to-r ${review.lightGradient} rounded-2xl opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500`}
+        animate={{
+          scale: [1, 1.02, 1],
+          opacity: [0.5, 0.8, 0.5],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+
+      {/* Card Content */}
+      <motion.div
+        className="relative bg-white rounded-2xl p-8 shadow-lg transition-all duration-500"
+        whileHover={{
+          y: -10,
+          boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
+        }}
+      >
+        <div className="flex items-start justify-between mb-6">
+          {/* User Info */}
+          <div className="flex items-center gap-4">
+            <motion.div
+              className={`w-12 h-12 rounded-xl bg-gradient-to-r ${review.gradient} flex items-center justify-center text-white font-semibold text-lg`}
+              whileHover={{ scale: 1.1, rotate: 360 }}
+              transition={{ duration: 0.5 }}
+            >
+              {review.name[0]}
+            </motion.div>
+            
+            <div>
+              <h3 className="font-semibold text-gray-900">{review.name}</h3>
+              <p className="text-sm text-gray-600">{review.role}</p>
             </div>
-            <p className="comment">{review.comment}</p>
-            <div className="quote-mark">"</div>
           </div>
+
+          {/* Rating */}
+          <div className="flex gap-1">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.2,
+                  delay: index * 0.1 + i * 0.1
+                }}
+              >
+                <Star
+                  className={`w-5 h-5 ${
+                    i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'
+                  }`}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Review Text */}
+        <motion.p
+          className="text-gray-600 relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          {review.comment}
+        </motion.p>
+
+        {/* Quote Icon */}
+        <motion.div
+          className="absolute bottom-6 right-8 text-gray-100"
+          animate={{
+            opacity: [0.3, 0.5, 0.3],
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <Quote size={40} />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const CustomerReviews = () => {
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  return (
+    <section
+      ref={ref}
+      className="py-24 bg-white relative overflow-hidden"
+    >
+      {/* Animated Background */}
+      <motion.div
+        className="absolute inset-0 -z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-purple-50 opacity-50" />
+        {[...Array(10)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-br from-indigo-100/20 to-purple-100/20 backdrop-blur-3xl"
+            style={{
+              width: Math.random() * 300 + 100,
+              height: Math.random() * 300 + 100,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, 50, 0],
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
         ))}
+      </motion.div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={controls}
+          variants={{
+            visible: { opacity: 1, y: 0 }
+          }}
+          className="text-center mb-20"
+        >
+          <motion.h2
+            className="text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+            animate={{
+              backgroundPosition: ["0%", "100%"],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            What Our Customers Say
+          </motion.h2>
+          <motion.p
+            className="mt-4 text-lg text-gray-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Trusted by thousands of satisfied users worldwide
+          </motion.p>
+        </motion.div>
+
+        {/* Reviews Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reviews.map((review, index) => (
+            <ReviewCard key={review.id} review={review} index={index} />
+          ))}
+        </div>
       </div>
-
-      <style jsx>{`
-        .reviews-container {
-          padding: 4rem 2rem;
-          max-width: 1200px;
-          margin: 0 auto;
-          background: white;
-        }
-
-        h2 {
-          text-align: center;
-          margin-bottom: 3rem;
-          font-size: 2.5rem;
-          color: #2d3748;
-          position: relative;
-        }
-
-        h2:after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 60px;
-          height: 4px;
-          background: linear-gradient(90deg, #6366f1, #8b5cf6);
-          border-radius: 2px;
-        }
-
-        .reviews-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 2.5rem;
-          padding: 1rem;
-        }
-
-        .review-card {
-          padding: 2rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .review-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 6px 30px rgba(0,0,0,0.1);
-        }
-
-        .review-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1.5rem;
-        }
-
-        .reviewer-info {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .name-badge {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: linear-gradient(45deg, #6366f1, #8b5cf6);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 1.2rem;
-        }
-
-        .reviewer-info h3 {
-          margin: 0;
-          font-size: 1.2rem;
-          color: #2d3748;
-        }
-
-        .role {
-          color: #64748b;
-          margin: 0.2rem 0;
-          font-size: 0.9rem;
-        }
-
-        .rating {
-          color: #ffd700;
-          font-size: 1.3rem;
-          letter-spacing: 2px;
-        }
-
-        .comment {
-          color: #4a5568;
-          line-height: 1.7;
-          margin: 0;
-          font-size: 1rem;
-          position: relative;
-          z-index: 1;
-        }
-
-        .quote-mark {
-          position: absolute;
-          bottom: -20px;
-          right: 20px;
-          font-size: 120px;
-          color: rgba(0,0,0,0.03);
-          font-family: serif;
-        }
-
-        @media (max-width: 768px) {
-          .reviews-container {
-            padding: 2rem 1rem;
-          }
-
-          h2 {
-            font-size: 2rem;
-          }
-
-          .reviews-grid {
-            gap: 1.5rem;
-          }
-        }
-      `}</style>
-    </div>
+    </section>
   );
 };
 
